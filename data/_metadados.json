@@ -1,0 +1,238 @@
+{
+  "seed": 42,
+  "gerado_em_janela": [
+    "2023-01-01",
+    "2026-08-31"
+  ],
+  "meses": 44,
+  "n_socios": 18000,
+  "n_jogos": 113,
+  "n_pagamentos": 280252,
+  "n_ingressos": 204622,
+  "n_transacoes_parceiros": 199073,
+  "n_cupons": 200175,
+  "n_linhas_campanha": 1757,
+  "params": {
+    "planos": [
+      [
+        "Fiel Digital",
+        14.9,
+        0.0,
+        0.0,
+        0,
+        0
+      ],
+      [
+        "Minha Vida",
+        24.5,
+        1.2,
+        0.25,
+        3,
+        0
+      ],
+      [
+        "Minha História",
+        60.0,
+        1.5,
+        0.35,
+        2,
+        0
+      ],
+      [
+        "Meu Amor",
+        300.0,
+        1.5,
+        0.35,
+        1,
+        0
+      ],
+      [
+        "Minha Cadeira",
+        700.0,
+        1.5,
+        0.0,
+        1,
+        1
+      ]
+    ],
+    "mix_plano": [
+      0.34,
+      0.38,
+      0.16,
+      0.08,
+      0.04
+    ],
+    "regioes": [
+      [
+        "Grande São Paulo",
+        0.52,
+        25
+      ],
+      [
+        "Interior de SP",
+        0.19,
+        180
+      ],
+      [
+        "Outros estados",
+        0.25,
+        900
+      ],
+      [
+        "Exterior",
+        0.04,
+        8000
+      ]
+    ],
+    "plano_por_regiao": {
+      "Grande São Paulo": [
+        0.16,
+        0.46,
+        0.22,
+        0.11,
+        0.05
+      ],
+      "Interior de SP": [
+        0.34,
+        0.4,
+        0.15,
+        0.08,
+        0.03
+      ],
+      "Outros estados": [
+        0.72,
+        0.18,
+        0.06,
+        0.03,
+        0.01
+      ],
+      "Exterior": [
+        0.9,
+        0.06,
+        0.02,
+        0.01,
+        0.01
+      ]
+    },
+    "canais": [
+      [
+        "Meta Ads",
+        0.31,
+        62.0,
+        18.0
+      ],
+      [
+        "Google Ads",
+        0.22,
+        74.0,
+        22.0
+      ],
+      [
+        "TikTok Ads",
+        0.11,
+        48.0,
+        16.0
+      ],
+      [
+        "Orgânico/SEO",
+        0.16,
+        9.0,
+        4.0
+      ],
+      [
+        "Indicação",
+        0.09,
+        21.0,
+        8.0
+      ],
+      [
+        "Loja/Presencial",
+        0.11,
+        33.0,
+        12.0
+      ]
+    ],
+    "cac_mult_plano": {
+      "Fiel Digital": 0.55,
+      "Minha Vida": 1.0,
+      "Minha História": 1.7,
+      "Meu Amor": 3.3,
+      "Minha Cadeira": 5.2
+    },
+    "engaj_mu": {
+      "Fiel Digital": 2.35,
+      "Minha Vida": 2.6,
+      "Minha História": 2.7,
+      "Meu Amor": 2.75,
+      "Minha Cadeira": 2.8
+    },
+    "engaj_sigma": 0.95,
+    "churn_base": {
+      "Fiel Digital": 0.062,
+      "Minha Vida": 0.028,
+      "Minha História": 0.02,
+      "Meu Amor": 0.013,
+      "Minha Cadeira": 0.008
+    },
+    "churn_mod_engajamento": -0.55,
+    "churn_mod_jogo_recente": -0.4,
+    "churn_pico_aniversario": 2.1,
+    "jogos_por_ano": 31,
+    "preco_medio_ingresso": 92.0,
+    "p_compra_jogo": {
+      "Fiel Digital": 0.04,
+      "Minha Vida": 0.34,
+      "Minha História": 0.42,
+      "Meu Amor": 0.55,
+      "Minha Cadeira": 0.88
+    },
+    "p_comparece": 0.86,
+    "p_libera_se_falta": 0.55,
+    "parceiros": [
+      [
+        "Zé Delivery",
+        "Bebidas",
+        78.0,
+        0.045,
+        0.75
+      ],
+      [
+        "Rede de Farmácias",
+        "Saúde",
+        62.0,
+        0.03,
+        1.0
+      ],
+      [
+        "Posto de Combustível",
+        "Mobilidade",
+        190.0,
+        0.012,
+        0.45
+      ],
+      [
+        "Streaming Esportivo",
+        "Assinatura",
+        39.9,
+        0.15,
+        2.3
+      ],
+      [
+        "Marketplace Oficial",
+        "E-commerce",
+        145.0,
+        0.06,
+        1.6
+      ]
+    ],
+    "p_uso_parceiro_base": 0.22,
+    "p_uso_parceiro_por_engaj": 0.55,
+    "cupom_pct_mensalidade": 0.5,
+    "cupom_share_clube": 0.6,
+    "cupom_resgate_base": 0.3,
+    "cupom_resgate_por_engaj": 0.45,
+    "custo_operacional_mes": 4.2,
+    "custo_conteudo_mes": 1.8,
+    "margem_ingresso": 0.7
+  }
+}

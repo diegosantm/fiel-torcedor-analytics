@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiel Torcedor — o sócio que não vai ao estádio</title>
+<style>
+:root{
+  --navy:#0D1B3A; --navy2:#1E2A4A; --blue:#2563EB;
+  --good:#16A34A; --good2:#84CC16; --reg:#EAB308; --warn:#F97316; --bad:#DC2626; --grey:#9CA3AF;
+  --txt:#1E2733; --sub:#5C6672; --line:rgba(30,42,74,.13); --glass:rgba(255,255,255,.86);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:28px 20px 60px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  color:var(--txt);
+  background:
+    radial-gradient(1100px 500px at 85% -5%, rgba(95,180,229,.34), transparent 60%),
+    radial-gradient(900px 600px at -10% 30%, rgba(37,99,235,.30), transparent 55%),
+    linear-gradient(160deg,#0D1B3A 0%,#16294D 45%,#1F3B60 100%);
+  background-attachment:fixed;
+}
+.wrap{max-width:1180px;margin:0 auto}
+header{color:#fff;margin-bottom:22px}
+header h1{margin:0 0 6px;font-size:27px;letter-spacing:-.3px}
+header .sub{opacity:.82;font-size:14px;line-height:1.55;max-width:820px}
+.aviso{
+  margin:14px 0 0;padding:11px 14px;border-radius:10px;font-size:12.5px;line-height:1.5;
+  background:rgba(249,115,22,.16);border:1px solid rgba(249,115,22,.45);color:#FFE8D6;
+}
+.card{
+  border-radius:16px;background:var(--glass);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.55);box-shadow:0 8px 24px rgba(8,16,38,.25);
+  padding:18px 20px;margin-bottom:16px;
+}
+.card h2{margin:0 0 4px;font-size:16px;letter-spacing:-.2px}
+.card .desc{margin:0 0 14px;font-size:13px;color:var(--sub);line-height:1.5}
+.como{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);
+  font-size:11.5px;color:var(--sub);line-height:1.5}
+.como b{color:var(--txt)}
+
+/* filtros */
+.filtros{display:flex;flex-wrap:wrap;gap:16px}
+.dim{min-width:150px}
+.dim .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--sub);
+  margin-bottom:6px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{
+  font-size:11.5px;padding:4px 9px;border-radius:999px;cursor:pointer;user-select:none;
+  border:1px solid var(--line);background:#fff;color:var(--sub);transition:.12s;
+}
+.chip:hover{transform:translateY(-1px)}
+.chip.on{background:var(--navy2);border-color:var(--navy2);color:#fff}
+.acoes{display:flex;gap:8px;align-items:flex-end;margin-left:auto}
+.btn{font-size:12px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);
+  background:#fff;cursor:pointer;color:var(--txt)}
+.btn:hover{background:#F3F6FB}
+.btn.primary{background:var(--navy2);color:#fff;border-color:var(--navy2)}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px;
+  cursor:pointer;transition:.14s}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(8,16,38,.14)}
+.kpi .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--sub);
+  font-weight:600;margin-bottom:6px}
+.kpi .v{font-size:24px;font-weight:700;letter-spacing:-.6px}
+.kpi .n{font-size:11px;color:var(--sub);margin-top:3px}
+.kpi .drill{font-size:10.5px;color:var(--blue);margin-top:6px}
+
+.tese{background:#fff;border-left:3px solid var(--blue);border-radius:10px;
+  padding:13px 15px;font-size:13.5px;line-height:1.6;margin-bottom:16px}
+.tese .bad{color:var(--bad);font-weight:600}
+.tese .good{color:var(--good);font-weight:600}
+.tese .warn{color:var(--warn);font-weight:600}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chartbox{position:relative;height:280px}
+.chartbox.alto{height:330px}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;
+  color:var(--sub);border-bottom:1px solid var(--line);padding:7px 8px;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+tr.clicavel{cursor:pointer}
+tr.clicavel:hover td{background:#F3F6FB}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600}
+.pill.ok{background:rgba(22,163,74,.13);color:var(--good)}
+.pill.fora{background:rgba(220,38,38,.13);color:var(--bad)}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(8,16,38,.55);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;z-index:50;padding:24px}
+.modal-bg[hidden]{display:none}   /* obrigatório: vence hidden sobre display:flex */
+.modal{background:#fff;border-radius:14px;width:100%;max-width:1000px;max-height:86vh;
+  display:flex;flex-direction:column;overflow:hidden}
+.modal .top{padding:14px 18px;border-bottom:1px solid var(--line);
+  display:flex;gap:12px;align-items:center}
+.modal .top h3{margin:0;font-size:15px;flex:1}
+.modal .top input{font-size:12.5px;padding:6px 10px;border:1px solid var(--line);
+  border-radius:8px;width:220px}
+.modal .body{overflow:auto;padding:0 18px 14px}
+.modal .foot{padding:10px 18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--sub)}
+.x{cursor:pointer;font-size:20px;color:var(--sub);line-height:1;padding:0 4px}
+
+footer{color:rgba(255,255,255,.62);font-size:11.5px;text-align:center;margin-top:26px;line-height:1.6}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Fiel Torcedor: quanto vale o sócio que não vai ao estádio</h1>
+  <div class="sub">
+    A régua de mérito do programa é a presença: pontua-se por compra mais acesso ao jogo.
+    Quem mora longe paga todo mês e nunca sai do zero. Este painel dimensiona esse público,
+    mede o que ele gera e testa três propostas para destravá-lo.
+  </div>
+  <div class="aviso">
+    <b>Base fictícia.</b> Nenhum dado real do Sport Club Corinthians Paulista foi utilizado.
+    A estrutura de planos, mensalidades, pontuação e regra de cupom reproduz o que está
+    publicado em fieltorcedor.com.br (consulta em set/2026); volumes, custos de mídia e taxas
+    de churn são premissas declaradas no gerador. Os números <b>não são evidência sobre o
+    programa real</b>: demonstram o desenho da medição e o corte de decisão.
+  </div>
+</header>
+
+<div class="card">
+  <h2>Recorte</h2>
+  <p class="desc">Todo número da página é recalculado a partir da base filtrada. Nenhum agregado é pré-calculado.</p>
+  <div class="filtros" id="filtros"></div>
+</div>
+
+<div class="tese" id="tese"></div>
+
+<div class="kpis" id="kpis"></div>
+<div style="height:16px"></div>
+
+<div class="grid2">
+  <div class="card">
+    <h2>Retenção de 12 meses por plano</h2>
+    <p class="desc">Coorte fechada: só sócios cuja janela de 12 meses já terminou.</p>
+    <div class="chartbox"><canvas id="c_ret_plano"></canvas></div>
+    <div class="como"><b>Como ler:</b> cada barra é a fatia da coorte daquele plano que
+      seguia ativa no 12º mês. Verde a partir de 85%, amarelo entre 70% e 85%, vermelho abaixo.
+      O n aparece no rótulo porque faixa pequena não sustenta conclusão.
+      Limitação: em base fictícia a diferença entre planos é premissa do gerador.
+      Clique em qualquer barra para abrir os sócios.</div>
+  </div>
+
+  <div class="card">
+    <h2>Margem de 12 meses contra CAC, por canal</h2>
+    <p class="desc">Margem do programa: mensalidade mais comissão de parceiro, menos cupom e custo de servir.</p>
+    <div class="chartbox"><canvas id="c_canal"></canvas></div>
+    <div class="como"><b>Como ler:</b> barra azul é o CAC médio, barra escura é a margem
+      acumulada nos 12 primeiros meses. <b>A bilheteria fica fora da margem de propósito</b>:
+      o assento seria vendido de qualquer forma e o sócio ainda compra com desconto, então
+      creditá-la ao programa responderia a pergunta pela definição da métrica.
+      Clique para ver os sócios do canal.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Engajamento no app contra retenção, separado por presença</h2>
+  <p class="desc">A pergunta é se existe uma régua de mérito alternativa à presença — e se ela já está sendo coletada.</p>
+  <div class="chartbox alto"><canvas id="c_engaj"></canvas></div>
+  <div class="como"><b>Como ler:</b> duas séries, quem vai e quem não vai ao estádio, sobre as
+    mesmas faixas de moedas do Universo SCCP. As faixas são cortes fixos declarados no schema,
+    não quartis — quartil muda de significado a cada filtro.
+    <b>Ressalva:</b> nesta base a relação entre engajamento e retenção é premissa do gerador,
+    não descoberta. Em dados reais exigiria teste controlado, porque quem engaja mais pode ser
+    simplesmente quem já era mais fiel. Clique em um ponto para abrir o grupo.</div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <h2>Onde a pontuação vigente enxerga zero</h2>
+    <p class="desc">Distribuição de pontos acumulados pela regra atual, no recorte selecionado.</p>
+    <div class="chartbox"><canvas id="c_pontos"></canvas></div>
+    <div class="como"><b>Como ler:</b> a primeira coluna é quem tem exatamente zero ponto.
+      Inclui todo o Fiel Digital, que não pontua nem quando comparece, porque o plano tem
+      pontuação zero por jogo na regra vigente. Sem ponto não há prioridade, e sem prioridade
+      não há progressão. Clique para ver quem está na coluna.</div>
+  </div>
+
+  <div class="card">
+    <h2>Resgate do cupom de parceiro</h2>
+    <p class="desc">O benefício mais caro do programa está chegando a quem paga por ele?</p>
+    <div class="chartbox"><canvas id="c_cupom"></canvas></div>
+    <div class="como"><b>Como ler:</b> taxa de resgate por faixa de engajamento.
+      <b>O Fiel Digital não aparece como resgate baixo</b>: ele não recebe cupom pela regra
+      atual, o que é ausência de benefício e não desempenho ruim — categoria própria, nunca
+      somada à faixa pior. Cupom não resgatado não custa caixa, mas também não gera valor
+      percebido e ocupa o espaço de comunicação de um benefício que funcionaria.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Públicos acionáveis no recorte</h2>
+  <p class="desc">Cada linha é uma audiência exportável, com o tamanho antes da decisão de investimento.</p>
+  <div id="tab_segmentos"></div>
+  <div class="como"><b>Como ler:</b> segmentação heurística sobre a base ativa, com cortes
+    declarados. Não é modelo de propensão treinado: é a régua simples que precede o modelo e
+    já resolve boa parte do problema. Um classificador só se justifica se ganhar deste baseline.
+    Clique na linha para abrir os sócios do segmento.</div>
+</div>
+
+<div class="card">
+  <h2>Validação</h2>
+  <p class="desc">O que sustenta os números acima.</p>
+  <div class="grid2">
+    <div>
+      <h3 style="font-size:13px;margin:0 0 8px">Casos-teste da regra de negócio</h3>
+      <div id="tab_testes"></div>
+    </div>
+    <div>
+      <h3 style="font-size:13px;margin:0 0 8px">Crosscheck Python × JavaScript</h3>
+      <div id="tab_cross"></div>
+    </div>
+  </div>
+  <div style="margin-top:16px">
+    <h3 style="font-size:13px;margin:0 0 8px">As regras aplicadas</h3>
+    <ol style="font-size:12.5px;line-height:1.7;color:var(--sub);margin:0;padding-left:20px">
+      <li><b>Fonte única de leitura.</b> Margem, tempo de vida e faixa de engajamento são
+        definidos uma vez, na view <code>vw_socio_economia</code>. Nenhuma query e nenhum
+        trecho de JavaScript recalcula essas regras por conta própria.</li>
+      <li><b>Coorte fechada em toda comparação.</b> Só entram sócios cuja janela de 12 meses
+        terminou dentro do período simulado. Sem isso, quem aderiu há dois meses contaria como
+        retido e inflaria todo grupo que cresceu no fim da janela.</li>
+      <li><b>Horizonte fixo de 12 meses.</b> Comparações usam margem dos 12 primeiros meses de
+        cada sócio, nunca margem acumulada até hoje, que é função da data de entrada.</li>
+      <li><b>Bilheteria fora da margem do programa.</b> O assento seria vendido de qualquer
+        forma, o sócio compra com desconto de 25% a 35%, e incluí-la faria todo plano
+        presencial vencer por construção.</li>
+      <li><b>Ausência não é zero.</b> Fiel Digital sem cupom é ausência de benefício, não
+        resgate baixo, e ocupa linha própria.</li>
+      <li><b>Níveis de evidência.</b> A falta a jogo se divide em liberou o ingresso e sumiu:
+        são situações que pedem ações diferentes do clube.</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  Projeto de portfólio. Base fictícia gerada com semente fixa (SEED=42) — reexecutar reproduz
+  os mesmos números.<br>
+  Carimbo de build: <span id="fp"></span> · Verificação em runtime: <span id="fp_check"></span>
+</footer>
+</div>
+
+<div class="modal-bg" id="modal" hidden>
+  <div class="modal">
+    <div class="top">
+      <h3 id="m_titulo"></h3>
+      <input id="m_busca" placeholder="buscar no recorte...">
+      <span class="x" id="m_fechar">&times;</span>
+    </div>
+    <div class="body"><div id="m_tabela"></div></div>
+    <div class="foot" id="m_rodape"></div>
+  </div>
+</div>
+
+<script>/*__CHARTJS__*/</script>
+<script>
+const DADOS = "__DATA__";
+
+/* ------------------------------------------------------------------ *
+ * Base linha a linha. Cada sócio é um array; categóricos são índices. *
+ * ------------------------------------------------------------------ */
+const PL=0, RG=1, CN=2, EN=3, PR=4, CO=5, RT=6, AT=7, CAC=8, M12=9, MTOT=10,
+      MOED=11, JOGOS=12, PTS=13, MESES=14, DIST=15, ID=16, COMIS=17,
+      CUPE=18, CUPR=19, NOSHOW=20, LIB=21, TRX=22;
+
+const D = DADOS.dims;
+const BASE = DADOS.socios;
+
+const DIMS = {
+  plano:       {campo:PL, rotulos:D.plano,       titulo:'Plano'},
+  regiao:      {campo:RG, rotulos:D.regiao,      titulo:'Região'},
+  canal:       {campo:CN, rotulos:D.canal,       titulo:'Canal de aquisição'},
+  engajamento: {campo:EN, rotulos:D.engajamento, titulo:'Engajamento no app'},
+  presenca:    {campo:PR, rotulos:D.presenca,    titulo:'Presença no estádio'},
+};
+
+const state = {
+  sel: {},
+  soCoorte: true,   // comparações honestas exigem coorte fechada
+};
+for (const k in DIMS) state.sel[k] = new Set(DIMS[k].rotulos.map((_, i) => i));
+
+function passes(r){
+  if (state.soCoorte && r[CO] !== 1) return false;
+  for (const k in DIMS) if (!state.sel[k].has(r[DIMS[k].campo])) return false;
+  return true;
+}
+
+let curRows = [];
+
+/* ---------------------------- formatação --------------------------- */
+const fmtInt = n => n.toLocaleString('pt-BR', {maximumFractionDigits:0});
+const fmtR$  = n => 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fmtPct = n => n.toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1}) + '%';
+const media  = (rows, f) => rows.length ? rows.reduce((s,r)=>s+r[f],0)/rows.length : 0;
+const soma   = (rows, f) => rows.reduce((s,r)=>s+r[f],0);
+
+/* Faixas de julgamento: definidas UMA vez, usadas em todo lugar.
+   Cor comunica julgamento, não magnitude. */
+const FAIXAS_RET = [{lim:85, cor:'#16A34A'}, {lim:70, cor:'#EAB308'}, {lim:0, cor:'#DC2626'}];
+function corRetencao(pct){ for(const f of FAIXAS_RET) if(pct >= f.lim) return f.cor; return '#DC2626'; }
+
+/* ------------------------------ filtros ---------------------------- */
+function montarFiltros(){
+  const el = document.getElementById('filtros');
+  let h = '';
+  for (const k in DIMS){
+    h += `<div class="dim"><div class="lbl">${DIMS[k].titulo}</div><div class="chips">`;
+    DIMS[k].rotulos.forEach((r,i) => {
+      h += `<span class="chip on" data-dim="${k}" data-i="${i}">${r}</span>`;
+    });
+    h += '</div></div>';
+  }
+  h += `<div class="acoes">
+          <button class="btn primary" id="btn_coorte"></button>
+          <button class="btn" id="btn_limpar">Limpar filtros</button>
+        </div>`;
+  el.innerHTML = h;
+
+  el.querySelectorAll('.chip').forEach(c => {
+    c.onclick = () => {
+      const k = c.dataset.dim, i = +c.dataset.i;
+      if (state.sel[k].has(i)) state.sel[k].delete(i); else state.sel[k].add(i);
+      if (state.sel[k].size === 0) DIMS[k].rotulos.forEach((_,j)=>state.sel[k].add(j));
+      render();
+    };
+  });
+  document.getElementById('btn_coorte').onclick = () => { state.soCoorte = !state.soCoorte; render(); };
+  document.getElementById('btn_limpar').onclick = () => {
+    for (const k in DIMS) DIMS[k].rotulos.forEach((_,i)=>state.sel[k].add(i));
+    render();
+  };
+}
+
+function sincronizarChips(){
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('on', state.sel[c.dataset.dim].has(+c.dataset.i));
+  });
+  const b = document.getElementById('btn_coorte');
+  b.textContent = state.soCoorte ? 'Coorte fechada de 12m: ativa' : 'Coorte fechada de 12m: desligada';
+  b.classList.toggle('primary', state.soCoorte);
+}
+
+/* -------------------------------- KPIs ----------------------------- */
+function renderKPIs(rows){
+  const ret  = rows.length ? soma(rows, RT) / rows.length * 100 : 0;
+  const m12  = media(rows, M12);
+  const cac  = media(rows, CAC);
+  const zero = rows.filter(r => r[PTS] === 0);
+  const ratio = cac > 0 ? m12 / cac : 0;
+
+  const kpis = [
+    {k:'Sócios no recorte', v:fmtInt(rows.length),
+     n:`${fmtPct(rows.length/BASE.length*100)} da base simulada`, rows:rows},
+    {k:'Retenção 12 meses', v:fmtPct(ret),
+     n:'seguiam ativos no 12º mês', rows:rows.filter(r=>r[RT]===0), rot:'que não chegaram a 12 meses'},
+    {k:'Margem M12 média', v:fmtR$(m12),
+     n:'mensalidade + parceiro − cupom − custo', rows:rows},
+    {k:'CAC médio', v:fmtR$(cac),
+     n:`margem/CAC = ${ratio.toFixed(1)}x`, rows:rows},
+    {k:'Sem pontuação', v:fmtPct(rows.length ? zero.length/rows.length*100 : 0),
+     n:`${fmtInt(zero.length)} sócios com zero ponto`, rows:zero, rot:'com zero ponto na regra vigente'},
+  ];
+
+  document.getElementById('kpis').innerHTML = kpis.map((x,i) =>
+    `<div class="kpi" data-i="${i}">
+       <div class="k">${x.k}</div><div class="v">${x.v}</div>
+       <div class="n">${x.n}</div><div class="drill">clique para ver →</div>
+     </div>`).join('');
+
+  document.querySelectorAll('.kpi').forEach(el => {
+    el.onclick = () => {
+      const x = kpis[+el.dataset.i];
+      openDrill(`${x.k} — ${x.rot || 'sócios do recorte'}`, x.rows);
+    };
+  });
+}
+
+/* -------------------------- tese do recorte ------------------------ */
+function renderTese(rows){
+  const remoto = rows.filter(r => r[PR] === 0);              // nunca foi ao estádio
+  const freq   = rows.filter(r => r[PR] === 2);              // frequentador
+  const retR = remoto.length ? soma(remoto,RT)/remoto.length*100 : 0;
+  const retF = freq.length   ? soma(freq,RT)/freq.length*100   : 0;
+  const gap  = retF - retR;
+
+  let t = `No recorte atual há <b>${fmtInt(rows.length)}</b> sócios. `;
+
+  if (remoto.length >= 30 && freq.length >= 30){
+    const cls = gap > 20 ? 'bad' : gap > 8 ? 'warn' : 'good';
+    t += `Quem nunca foi ao estádio retém <span class="${cls}">${fmtPct(retR)}</span> em 12 meses,
+          contra ${fmtPct(retF)} de quem frequenta — uma diferença de
+          <span class="${cls}">${gap.toFixed(1)} pontos percentuais</span>. `;
+  } else {
+    t += `O recorte não tem os dois grupos em volume suficiente para comparar presença
+          (mínimo de 30 sócios de cada lado), então a leitura de retenção fica suspensa. `;
+  }
+
+  const zero = rows.filter(r => r[PTS] === 0).length;
+  if (rows.length && zero / rows.length > 0.15){
+    t += `<b>${fmtPct(zero/rows.length*100)}</b> do recorte está com zero ponto na regra vigente:
+          paga todo mês e não progride na fila de prioridade. `;
+  }
+
+  const semCupom = rows.filter(r => r[CUPE] === 0).length;
+  if (rows.length && semCupom / rows.length > 0.25){
+    t += `<b>Atenção:</b> ${fmtPct(semCupom/rows.length*100)} do recorte não recebe cupom de
+          parceiro pela regra atual — nesse grupo, resgate baixo é ausência de benefício, não
+          desempenho ruim. `;
+  }
+
+  if (!state.soCoorte){
+    t += `<span class="warn"><b>Coorte desligada:</b> sócios sem 12 meses de janela estão
+          incluídos e contam como retidos. A retenção acima está inflada — use apenas para
+          contagem, nunca para comparar grupos.</span>`;
+  }
+
+  document.getElementById('tese').innerHTML = t;
+}
+
+/* ------------------------------ gráficos --------------------------- */
+const charts = {};
+function novoChart(id, cfg){
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), cfg);
+}
+
+function agrupar(rows, campo, nLabels){
+  const g = Array.from({length:nLabels}, () => []);
+  rows.forEach(r => g[r[campo]].push(r));
+  return g;
+}
+
+function renderRetPlano(rows){
+  const g = agrupar(rows, PL, D.plano.length);
+  const pcts = g.map(x => x.length ? soma(x,RT)/x.length*100 : 0);
+  const labels = D.plano.map((p,i) => `${p} (n=${fmtInt(g[i].length)})`);
+  novoChart('c_ret_plano', {
+    type:'bar',
+    data:{labels, datasets:[{data:pcts, backgroundColor:pcts.map(corRetencao), borderRadius:5}]},
+    options:{
+      maintainAspectRatio:false, plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>`Retenção 12m: ${fmtPct(c.parsed.y)}`}}},
+      scales:{y:{beginAtZero:true, max:100, ticks:{callback:v=>v+'%'}},
+              x:{ticks:{font:{size:10}, maxRotation:30, minRotation:0}}},
+      onClick:(e,el)=>{ if(el.length) openDrill(`Plano ${D.plano[el[0].index]}`, g[el[0].index]); }
+    }
+  });
+}
+
+function renderCanal(rows){
+  const g = agrupar(rows, CN, D.canal.length);
+  const ordem = D.canal.map((_,i)=>i).sort((a,b)=>media(g[b],M12)-media(g[a],M12));
+  const labels = ordem.map(i => `${D.canal[i]} (n=${fmtInt(g[i].length)})`);
+  novoChart('c_canal', {
+    type:'bar',
+    data:{labels, datasets:[
+      {label:'CAC médio', data:ordem.map(i=>media(g[i],CAC)), backgroundColor:'#60A5FA', borderRadius:4},
+      {label:'Margem 12 meses', data:ordem.map(i=>media(g[i],M12)), backgroundColor:'#1E2A4A', borderRadius:4},
+    ]},
+    options:{
+      maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{boxWidth:11, font:{size:11}}},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmtR$(c.parsed.y)}`}}},
+      scales:{y:{beginAtZero:true, ticks:{callback:v=>'R$'+fmtInt(v)}},
+              x:{ticks:{font:{size:10}, maxRotation:30}}},
+      onClick:(e,el)=>{ if(el.length) openDrill(`Canal ${D.canal[ordem[el[0].index]]}`, g[ordem[el[0].index]]); }
+    }
+  });
+}
+
+function renderEngaj(rows){
+  const vai  = rows.filter(r => r[PR] !== 0);
+  const nvai = rows.filter(r => r[PR] === 0);
+  const gv = agrupar(vai,  EN, D.engajamento.length);
+  const gn = agrupar(nvai, EN, D.engajamento.length);
+  const pv = gv.map(x => x.length ? soma(x,RT)/x.length*100 : null);
+  const pn = gn.map(x => x.length ? soma(x,RT)/x.length*100 : null);
+  const labels = D.engajamento.map((f,i) =>
+    `${f}\nvai n=${fmtInt(gv[i].length)} · não vai n=${fmtInt(gn[i].length)}`);
+  novoChart('c_engaj', {
+    type:'line',
+    data:{labels, datasets:[
+      {label:'Vai ao estádio', data:pv, borderColor:'#16A34A', backgroundColor:'#16A34A',
+       tension:.25, pointRadius:5, spanGaps:true},
+      {label:'Não vai ao estádio', data:pn, borderColor:'#DC2626', backgroundColor:'#DC2626',
+       tension:.25, pointRadius:5, spanGaps:true},
+    ]},
+    options:{
+      maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{boxWidth:11, font:{size:11}}},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y==null?'sem base':fmtPct(c.parsed.y)}`}}},
+      scales:{y:{beginAtZero:true, max:100, ticks:{callback:v=>v+'%'},
+                 title:{display:true, text:'Retenção 12 meses', font:{size:11}}},
+              x:{ticks:{font:{size:9.5}, callback:function(v){return this.getLabelForValue(v).split('\n');}}}},
+      onClick:(e,el)=>{
+        if(!el.length) return;
+        const i = el[0].index, d = el[0].datasetIndex;
+        openDrill(`${D.engajamento[i]} — ${d===0?'vai ao estádio':'não vai ao estádio'}`,
+                  d===0 ? gv[i] : gn[i]);
+      }
+    }
+  });
+}
+
+function renderPontos(rows){
+  const faixas = [
+    {rot:'Zero',      teste:r=>r[PTS]===0},
+    {rot:'0 a 10',    teste:r=>r[PTS]>0  && r[PTS]<=10},
+    {rot:'10 a 30',   teste:r=>r[PTS]>10 && r[PTS]<=30},
+    {rot:'30 a 60',   teste:r=>r[PTS]>30 && r[PTS]<=60},
+    {rot:'60+',       teste:r=>r[PTS]>60},
+  ];
+  const g = faixas.map(f => rows.filter(f.teste));
+  const cores = ['#DC2626','#F97316','#EAB308','#84CC16','#16A34A'];
+  novoChart('c_pontos', {
+    type:'bar',
+    data:{labels:faixas.map((f,i)=>`${f.rot} (n=${fmtInt(g[i].length)})`),
+      datasets:[{data:g.map(x=>x.length), backgroundColor:cores, borderRadius:5}]},
+    options:{
+      maintainAspectRatio:false, plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>`${fmtInt(c.parsed.y)} sócios`}}},
+      scales:{y:{beginAtZero:true, ticks:{callback:v=>fmtInt(v)}}, x:{ticks:{font:{size:10}}}},
+      onClick:(e,el)=>{ if(el.length) openDrill(`Pontos: ${faixas[el[0].index].rot}`, g[el[0].index]); }
+    }
+  });
+}
+
+function renderCupom(rows){
+  // Fiel Digital não recebe cupom: categoria própria, nunca a faixa pior.
+  const comCupom = rows.filter(r => r[CUPE] > 0);
+  const semCupom = rows.filter(r => r[CUPE] === 0);
+  const g = agrupar(comCupom, EN, D.engajamento.length);
+  const taxas = g.map(x => {
+    const e = soma(x,CUPE), rr = soma(x,CUPR);
+    return e > 0 ? rr/e*100 : null;
+  });
+  const labels = D.engajamento.map((f,i)=>`${f}\nn=${fmtInt(g[i].length)}`);
+  labels.push(`sem cupom (regra atual)\nn=${fmtInt(semCupom.length)}`);
+  taxas.push(null);
+  const cores = taxas.map(t => t === null ? '#9CA3AF' : t >= 60 ? '#16A34A' : t >= 45 ? '#EAB308' : '#DC2626');
+  novoChart('c_cupom', {
+    type:'bar',
+    data:{labels, datasets:[{data:taxas.map(t=>t===null?0:t), backgroundColor:cores, borderRadius:5}]},
+    options:{
+      maintainAspectRatio:false, plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>taxas[c.dataIndex]===null
+          ? 'Sem cupom pela regra atual — ausência de benefício, não resgate baixo'
+          : `Resgate: ${fmtPct(taxas[c.dataIndex])}`}}},
+      scales:{y:{beginAtZero:true, max:100, ticks:{callback:v=>v+'%'}},
+              x:{ticks:{font:{size:9.5}, callback:function(v){return this.getLabelForValue(v).split('\n');}}}},
+      onClick:(e,el)=>{
+        if(!el.length) return;
+        const i = el[0].index;
+        openDrill(i < D.engajamento.length ? `Cupom — ${D.engajamento[i]}` : 'Sócios sem cupom pela regra atual',
+                  i < D.engajamento.length ? g[i] : semCupom);
+      }
+    }
+  });
+}
+
+/* --------------------------- segmentos ----------------------------- */
+function segmentar(rows){
+  const vivos = rows.filter(r => r[AT] === 1);
+  const defs = [
+    {rot:'A. Risco de cancelamento', acao:'Reativação de conteúdo e contato',
+     teste:r => r[MOED]<5 && r[JOGOS]===0 && r[MESES]>=6},
+    {rot:'B. Candidato a upgrade de plano', acao:'Oferta de migração com abatimento',
+     teste:r => (r[PL]===0||r[PL]===1) && r[DIST]<=120 && r[JOGOS]>=3 && r[MOED]>=15},
+    {rot:'C. Remoto engajado', acao:'Trilha de pontos digital e parceria de consumo',
+     teste:r => r[DIST]>120 && r[MOED]>=15},
+    {rot:'D. Remoto frio', acao:'Conteúdo exclusivo e clube de vantagens',
+     teste:r => r[DIST]>120},
+    {rot:'E. Base estável', acao:'Manutenção', teste:() => true},
+  ];
+  const g = defs.map(() => []);
+  vivos.forEach(r => { for (let i=0;i<defs.length;i++) if (defs[i].teste(r)) { g[i].push(r); break; } });
+  return {defs, g, total:vivos.length};
+}
+
+function renderSegmentos(rows){
+  const {defs, g, total} = segmentar(rows);
+  let h = `<table><thead><tr>
+    <th>Segmento</th><th>Ação sugerida</th><th class="num">Sócios</th>
+    <th class="num">% da base ativa</th><th class="num">Engajamento</th>
+    <th class="num">Jogos</th><th class="num">Margem acum. média</th></tr></thead><tbody>`;
+  defs.forEach((d,i) => {
+    const x = g[i];
+    h += `<tr class="clicavel" data-i="${i}">
+      <td><b>${d.rot}</b></td><td style="color:var(--sub)">${d.acao}</td>
+      <td class="num">${fmtInt(x.length)}</td>
+      <td class="num">${total?fmtPct(x.length/total*100):'—'}</td>
+      <td class="num">${media(x,MOED).toFixed(1)}</td>
+      <td class="num">${media(x,JOGOS).toFixed(1)}</td>
+      <td class="num">${fmtR$(media(x,MTOT))}</td></tr>`;
+  });
+  h += '</tbody></table>';
+  const el = document.getElementById('tab_segmentos');
+  el.innerHTML = h;
+  el.querySelectorAll('tr.clicavel').forEach(tr => {
+    tr.onclick = () => openDrill(defs[+tr.dataset.i].rot, g[+tr.dataset.i]);
+  });
+}
+
+/* ------------------------------ drill ------------------------------ */
+let mRows = [];
+function openDrill(titulo, rows){
+  mRows = [...rows].sort((a,b) => a[RT] - b[RT] || b[MESES] - a[MESES]); // pior primeiro
+  document.getElementById('m_titulo').textContent = titulo;
+  document.getElementById('m_busca').value = '';
+  renderModal('');
+  document.getElementById('modal').hidden = false;
+}
+
+function renderModal(busca){
+  const q = busca.trim().toLowerCase();
+  const filtradas = q ? mRows.filter(r =>
+    String(r[ID]).includes(q) ||
+    D.plano[r[PL]].toLowerCase().includes(q) ||
+    D.regiao[r[RG]].toLowerCase().includes(q) ||
+    D.canal[r[CN]].toLowerCase().includes(q)) : mRows;
+
+  const TETO = 300;
+  const mostradas = filtradas.slice(0, TETO);
+  let h = `<table><thead><tr>
+    <th>ID</th><th>Plano</th><th>Região</th><th>Canal</th>
+    <th class="num">Dist. (km)</th><th class="num">Meses</th><th class="num">Jogos</th>
+    <th class="num">Moedas/mês</th><th class="num">Pontos</th>
+    <th class="num">CAC</th><th class="num">Margem M12</th><th>12 meses</th></tr></thead><tbody>`;
+  mostradas.forEach(r => {
+    h += `<tr>
+      <td>${r[ID]}</td><td>${D.plano[r[PL]]}</td><td>${D.regiao[r[RG]]}</td>
+      <td>${D.canal[r[CN]]}</td>
+      <td class="num">${fmtInt(r[DIST])}</td><td class="num">${r[MESES]}</td>
+      <td class="num">${r[JOGOS]}</td><td class="num">${r[MOED].toFixed(1)}</td>
+      <td class="num">${r[PTS].toFixed(1)}</td>
+      <td class="num">${fmtR$(r[CAC])}</td><td class="num">${fmtR$(r[M12])}</td>
+      <td><span class="pill ${r[RT]?'ok':'fora'}">${r[RT]?'reteve':'saiu antes'}</span></td>
+    </tr>`;
+  });
+  h += '</tbody></table>';
+  document.getElementById('m_tabela').innerHTML = h;
+  document.getElementById('m_rodape').textContent =
+    `Mostrando ${fmtInt(mostradas.length)} de ${fmtInt(filtradas.length)} sócios` +
+    (filtradas.length > TETO ? ` (teto de ${TETO} linhas por render)` : '') +
+    ' · ordenado por quem saiu antes.';
+}
+
+document.getElementById('m_busca').oninput = e => renderModal(e.target.value);
+document.getElementById('m_fechar').onclick = () => document.getElementById('modal').hidden = true;
+document.getElementById('modal').onclick = e => {
+  if (e.target.id === 'modal') document.getElementById('modal').hidden = true;
+};
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('modal').hidden = true;
+});
+
+/* ---------------------------- validação ---------------------------- */
+function renderValidacao(){
+  let h = '<table><thead><tr><th>Caso</th><th>Esperado</th><th>Obtido</th><th></th></tr></thead><tbody>';
+  DADOS.testes.forEach(t => {
+    h += `<tr><td>${t.caso}</td><td class="num">${t.esperado}</td><td class="num">${t.obtido}</td>
+          <td><span class="pill ${t.ok?'ok':'fora'}">${t.ok?'OK':'Falhou'}</span></td></tr>`;
+  });
+  document.getElementById('tab_testes').innerHTML = h + '</tbody></table>';
+
+  // O JavaScript recalcula, do seu jeito, o que o Python calculou do dele.
+  const c = BASE.filter(r => r[CO] === 1);
+  const js = {
+    'Sócios na coorte de 12 meses': fmtInt(c.length),
+    'Retenção 12m da coorte (%)': (soma(c,RT)/c.length*100).toFixed(1),
+    'Margem M12 média (R$)': media(c,M12).toFixed(2),
+    'CAC médio (R$)': media(c,CAC).toFixed(2),
+    'Sócios com zero ponto (regra atual)': fmtInt(c.filter(r=>r[PTS]===0).length),
+    'Retenção 12m do Fiel Digital (%)': (() => {
+      const f = c.filter(r => r[PL] === 0);
+      return (soma(f,RT)/f.length*100).toFixed(1);
+    })(),
+  };
+  let h2 = '<table><thead><tr><th>Métrica</th><th class="num">Python</th><th class="num">JavaScript</th><th></th></tr></thead><tbody>';
+  DADOS.crosscheck.forEach(l => {
+    const v = js[l.metrica];
+    // Tolerância de 0,1 para arredondamento de ponto flutuante entre as duas pilhas.
+    const a = parseFloat(String(l.python).replace(/\./g,'').replace(',','.'));
+    const b = parseFloat(String(v).replace(/\./g,'').replace(',','.'));
+    const ok = Math.abs(a-b) <= 0.1;
+    h2 += `<tr><td>${l.metrica}</td><td class="num">${l.python}</td><td class="num">${v}</td>
+           <td><span class="pill ${ok?'ok':'fora'}">${ok?'bate':'diverge'}</span></td></tr>`;
+  });
+  document.getElementById('tab_cross').innerHTML = h2 + '</tbody></table>';
+
+  document.getElementById('fp').textContent = DADOS.meta.fp;
+  document.getElementById('fp_check').textContent =
+    `${fmtInt(BASE.length)} sócios recontados no navegador` +
+    (BASE.length === DADOS.meta.n ? ' — confere' : ' — DIVERGE do gerador');
+}
+
+/* ------------------------------ render ----------------------------- */
+function render(){
+  curRows = BASE.filter(passes);
+  sincronizarChips();
+  renderTese(curRows);
+  renderKPIs(curRows);
+  renderRetPlano(curRows);
+  renderCanal(curRows);
+  renderEngaj(curRows);
+  renderPontos(curRows);
+  renderCupom(curRows);
+  renderSegmentos(curRows);
+}
+
+montarFiltros();
+renderValidacao();
+render();
+</script>
+</body>
+</html>

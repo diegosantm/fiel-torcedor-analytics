@@ -1,0 +1,6 @@
+faixa,socios,cupons_emitidos,cupons_resgatados,taxa_resgate_pct,custo_cupom_total,usos_parceiro_medio,comissao_gerada,retorno_por_real_de_cupom
+1. Dormente (<5),1072,23056,7796,33.8,274721.0,8.0,41852.0,0.15
+2. Leve (5-15),3063,68906,32403,47.0,1027560.0,13.5,202049.0,0.2
+3. Ativo (15-40),2686,62359,39002,62.5,1370719.0,20.3,262474.0,0.19
+4. Intenso (40+),1074,25864,18717,72.4,718775.0,24.7,128274.0,0.18
+— sem cupom (regra atual) —,4627,0,0,,0.0,10.2,246424.0,

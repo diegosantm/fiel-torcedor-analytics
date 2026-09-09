@@ -1,0 +1,9 @@
+faixa_engajamento,perfil_presenca,socios,retencao_12m_pct,meses_ativos_medio,usos_parceiro_medio,margem_m12_media
+1. Dormente (<5),Vai ao estádio,1424,83.9,21.1,7.9,825.42
+2. Leve (5-15),Vai ao estádio,3816,86.6,22.3,13.4,776.76
+3. Ativo (15-40),Vai ao estádio,3257,89.6,23.1,20.2,877.02
+4. Intenso (40+),Vai ao estádio,1251,91.6,24.1,24.6,990.09
+1. Dormente (<5),Não vai ao estádio,637,36.1,9.8,3.7,84.25
+2. Leve (5-15),Não vai ao estádio,1242,36.6,10.3,6.1,96.18
+3. Ativo (15-40),Não vai ao estádio,704,43.8,11.7,10.1,110.19
+4. Intenso (40+),Não vai ao estádio,191,48.7,12.2,12.7,122.81
